@@ -2,6 +2,8 @@
 
 # Banter Shell
 
+[![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
+
 **A cli written in rust designed to facilitate seamless text-based conversations with ChatGPT.**
 
 </div>
