@@ -14,11 +14,11 @@ async fn main() {
 
     if matches.get_flag("message") {
         let mut ctx = if bsh_profile_path.exists() {
-            // read .banterrc if it exists to get openai key and chat history
-            let temp_ctx = bsh::read_context(&bsh_profile_path);
-            // check if openai key is empty
-            match temp_ctx.openai_key.is_empty() {
-                // if openai key is empty, prompt user for openai key
+            // read existing profile file
+            let mut ctx_read = bsh::read_context(&bsh_profile_path);
+
+            match ctx_read.openai_key.is_empty() {
+                // prompt user for openai key
                 true => {
                     // get openai key from user
                     let openai_key = bsh::input(
@@ -26,19 +26,26 @@ async fn main() {
                         &mut io::stdin().lock(),
                         &mut io::stdout(),
                     );
-                    bsh::new_context(&bsh_profile_path, openai_key.unwrap())
+                    // update context and return
+                    ctx_read.openai_key = openai_key.unwrap().trim().to_string();
+                    ctx_read.hist = vec![];
+                    ctx_read
                 }
                 // else return context
-                false => temp_ctx,
+                false => ctx_read,
             }
         } else {
-            // create .banterrc if it doesn't exist and prompt user for openai key
+            // create profile if it doesn't exist and prompt user for openai key
             let openai_key = bsh::input(
                 "No OpenAI API key found, please enter:",
                 &mut io::stdin().lock(),
                 &mut io::stdout(),
             );
-            bsh::new_context(&bsh_profile_path, openai_key.unwrap())
+            // update context and return
+            bsh::Context {
+                openai_key: openai_key.unwrap().trim().to_string(),
+                hist: vec![],
+            }
         };
 
         // call OpenAI API and display response

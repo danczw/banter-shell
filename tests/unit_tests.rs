@@ -3,7 +3,7 @@ mod tests {
     use banter_shell as bsh;
     use dirs::home_dir;
     use std::fs::File;
-    use std::io::{self, Read, Write};
+    use std::io::{self, Write};
     use std::path::PathBuf;
 
     // set_home_dir_path tests
@@ -96,33 +96,6 @@ mod tests {
         assert_eq!(bsh::read_context(&context_file_path), expected_context);
 
         std::fs::remove_file(".bsh_profile").unwrap();
-    }
-
-    // new_context tests
-    #[test]
-    fn test_new_context() -> io::Result<()> {
-        // Create a temporary directory for the history file
-        let temp_dir = std::env::temp_dir();
-        let hist_file_path = temp_dir.join("history.txt");
-
-        // Create a new context
-        let key = "test_key".to_string();
-        let ctx = bsh::new_context(&hist_file_path, key.clone());
-
-        // Check that the context was initialized correctly
-        assert_eq!(ctx.openai_key, key);
-        assert_eq!(ctx.hist, Vec::<String>::new());
-
-        // Check that the openai key was written to the history file
-        let mut file = std::fs::File::open(&hist_file_path)?;
-        let mut contents = String::new();
-        file.read_to_string(&mut contents)?;
-        assert_eq!(contents, key + "\n");
-
-        // Delete the history file
-        std::fs::remove_file(&hist_file_path)?;
-
-        Ok(())
     }
 
     // input tests

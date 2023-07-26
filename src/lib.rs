@@ -4,7 +4,6 @@ use dirs::home_dir;
 use reqwest::{Client, StatusCode};
 use serde_json::{json, Map, Value};
 use std::io;
-use std::io::Write;
 use std::path::PathBuf;
 
 pub fn set_home_dir_path(file_name: &str) -> PathBuf {
@@ -43,15 +42,12 @@ pub fn read_context(hist_file_path: &PathBuf) -> Context {
     }
 }
 
-pub fn new_context(hist_file_path: &PathBuf, key: String) -> Context {
+pub fn new_context(key: String) -> Context {
     // Initialize Context struct
     let ctx = Context {
         openai_key: key.trim().to_string(),
         hist: vec![],
     };
-    // write openai key to file
-    let mut file = std::fs::File::create(hist_file_path).unwrap();
-    writeln!(file, "{}", ctx.openai_key).unwrap();
 
     ctx
 }
