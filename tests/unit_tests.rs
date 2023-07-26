@@ -134,10 +134,7 @@ mod tests {
         assert_eq!(result, "yes");
         assert_eq!(writer, b"Does this test pass? ");
     }
-
     // TODO: test call_oai
-
-    // TODO: test cli
 
     // TODO: test check_response
 }
