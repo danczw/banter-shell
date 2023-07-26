@@ -69,9 +69,9 @@ where
 
     let mut input = String::new();
     reader.read_line(&mut input)?;
-    let input = input.trim().to_lowercase();
+    let input = input.trim();
 
-    Ok(input)
+    Ok(input.to_string())
 }
 
 pub fn cli() -> Command {
