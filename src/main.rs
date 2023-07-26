@@ -12,7 +12,7 @@ async fn main() {
     // parse command line arguments
     let matches = bsh::cli().get_matches();
 
-    if matches.get_flag("message") {
+    if matches.contains_id("message") {
         let mut ctx = if bsh_profile_path.exists() {
             // read existing profile file
             let mut ctx_read = bsh::read_context(&bsh_profile_path);
