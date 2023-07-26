@@ -1,6 +1,6 @@
 use banter_shell as bsh;
 use colored::*;
-use std::io::Write;
+use std::io::{self, Write};
 
 #[tokio::main]
 async fn main() {
@@ -15,14 +15,26 @@ async fn main() {
         // check if openai key is empty
         match temp_ctx.openai_key.is_empty() {
             // if openai key is empty, prompt user for openai key
-            true => bsh::new_context(&bsh_profile_path),
+            true => {
+                // get openai key from user
+                let openai_key = bsh::input(
+                    "No OpenAI API key found, please enter:",
+                    &mut io::stdin().lock(),
+                    &mut io::stdout(),
+                );
+                bsh::new_context(&bsh_profile_path, openai_key.unwrap())
+            }
             // else return context
             false => temp_ctx,
         }
     } else {
         // create .banterrc if it doesn't exist and prompt user for openai key
-        std::fs::File::create(&bsh_profile_path).unwrap();
-        bsh::new_context(&bsh_profile_path)
+        let openai_key = bsh::input(
+            "No OpenAI API key found, please enter:",
+            &mut io::stdin().lock(),
+            &mut io::stdout(),
+        );
+        bsh::new_context(&bsh_profile_path, openai_key.unwrap())
     };
 
     // parse command line arguments

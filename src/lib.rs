@@ -1,7 +1,9 @@
+use clap::error::Result;
 use clap::{Arg, ArgAction, ArgMatches, Command};
 use dirs::home_dir;
 use reqwest::{Client, StatusCode};
 use serde_json::{json, Map, Value};
+use std::io;
 use std::io::Write;
 use std::path::PathBuf;
 
@@ -41,25 +43,35 @@ pub fn read_context(hist_file_path: &PathBuf) -> Context {
     }
 }
 
-pub fn new_context(hist_file_path: &PathBuf) -> Context {
+pub fn new_context(hist_file_path: &PathBuf, key: String) -> Context {
     // Initialize Context struct
-    let mut ctx = Context {
-        openai_key: "".to_string(),
+    let ctx = Context {
+        openai_key: key.trim().to_string(),
         hist: vec![],
     };
-    // get openai key from user
-    println!("No OpenAI API key found, please enter:");
-    let mut openai_key = String::new();
-    std::io::stdin()
-        .read_line(&mut openai_key)
-        .expect("Failed to read line");
-    ctx.openai_key = openai_key.trim().to_string();
-
     // write openai key to file
     let mut file = std::fs::File::create(hist_file_path).unwrap();
     writeln!(file, "{}", ctx.openai_key).unwrap();
 
     ctx
+}
+
+pub fn input<R, W>(prompt: &str, mut reader: R, mut writer: W) -> Result<String, io::Error>
+where
+    R: io::BufRead,
+    W: io::Write,
+{
+    match write!(writer, "{} ", prompt) {
+        Ok(_) => {}
+        Err(e) => return Err(e),
+    }
+    writer.flush()?;
+
+    let mut input = String::new();
+    reader.read_line(&mut input)?;
+    let input = input.trim().to_lowercase();
+
+    Ok(input)
 }
 
 pub fn cli() -> Command {
