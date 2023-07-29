@@ -1,6 +1,6 @@
 [package]
-name = "banter-shell"
-version = "0.1.0"
+name = "gtc"
+version = "0.2.0"
 authors = ["danczw <>"]
 license = "Apache-2.0"
 description = "A cli written in rust designed to facilitate seamless text-based conversations with ChatGPT."

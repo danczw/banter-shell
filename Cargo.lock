@@ -88,18 +88,6 @@ dependencies = [
 ]
 
 [[package]]
-name = "banter-shell"
-version = "0.1.0"
-dependencies = [
- "clap",
- "colored",
- "dirs",
- "reqwest",
- "serde_json",
- "tokio",
-]
-
-[[package]]
 name = "base64"
 version = "0.21.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -343,6 +331,18 @@ name = "gimli"
 version = "0.27.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "b6c80984affa11d98d1b88b66ac8853f143217b399d3c74116778ff8fdb4ed2e"
+
+[[package]]
+name = "gtc"
+version = "0.2.0"
+dependencies = [
+ "clap",
+ "colored",
+ "dirs",
+ "reqwest",
+ "serde_json",
+ "tokio",
+]
 
 [[package]]
 name = "h2"
@@ -853,9 +853,9 @@ dependencies = [
 
 [[package]]
 name = "serde"
-version = "1.0.176"
+version = "1.0.178"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "76dc28c9523c5d70816e393136b86d48909cfb27cecaa902d338c19ed47164dc"
+checksum = "60363bdd39a7be0266a520dab25fdc9241d2f987b08a01e01f0ec6d06a981348"
 
 [[package]]
 name = "serde_json"
