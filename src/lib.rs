@@ -71,7 +71,7 @@ where
 }
 
 pub fn cli() -> Command {
-    Command::new("bsh")
+    Command::new("gtc")
         .about("A cli designed to facilitate seamless text-based conversations with ChatGPT.")
         .arg_required_else_help(true)
         .arg(
