@@ -110,7 +110,7 @@ pub async fn call_oai(
     let body_json = Value::Object(body);
 
     // Initialize client and send request
-    let client: Client = reqwest::Client::new();
+    let client = Client::new();
     let resp = client
         .post(url)
         .header("Content-Type", "application/json")
