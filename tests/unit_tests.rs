@@ -109,5 +109,77 @@ mod tests {
     }
     // TODO: test call_oai
 
-    // TODO: test check_response
+    // test check_response
+    #[tokio::test]
+    async fn test_check_response_ok() {
+        // Request a new server from the pool
+        let mut server = mockito::Server::new();
+
+        // Use one of these addresses to configure your client
+        // let host = server.host_with_port();
+        let url = server.url();
+
+        // Create a mock response with status code 200 OK and some JSON data
+        let _mock = server
+            .mock("POST", "/")
+            .with_status(200)
+            .with_header("content-type", "application/json")
+            .with_body(r#"{"foo": "bar"}"#)
+            .create();
+
+        // Create a new reqwest client and send a request to the mock server
+        let client = reqwest::Client::new();
+        let resp = client
+            .post(&url)
+            .body(r#"{"foo": "bar"}"#)
+            .send()
+            .await
+            .unwrap();
+
+        // Call the check_response function with the mock response
+        let result = gtc::check_response(resp).await;
+
+        // Assert that the function returns the expected JSON data
+        assert_eq!(result.unwrap(), serde_json::json!({"foo": "bar"}));
+
+        assert!(true)
+    }
+
+    #[tokio::test]
+    async fn test_check_response_err() {
+        // Request a new server from the pool
+        let mut server = mockito::Server::new();
+
+        // Use one of these addresses to configure your client
+        // let host = server.host_with_port();
+        let url = server.url();
+
+        // Create a mock response with status code 200 OK and some JSON data
+        let _mock = server
+            .mock("POST", "/")
+            .with_status(400)
+            .with_header("content-type", "application/json")
+            .with_body(r#"{"error": "bad request"}"#)
+            .create();
+
+        // Create a new reqwest client and send a request to the mock server
+        let client = reqwest::Client::new();
+        let resp = client
+            .post(&url)
+            .body(r#"{"foo": "bar"}"#)
+            .send()
+            .await
+            .unwrap();
+
+        // Call the check_response function with the mock response
+        let result = gtc::check_response(resp).await;
+
+        // Assert that the function returns the expected Error
+        assert_eq!(
+            result.unwrap_err().to_string(),
+            r#"{"error": "bad request"}"#
+        );
+
+        assert!(true)
+    }
 }
