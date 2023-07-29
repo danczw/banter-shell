@@ -1,5 +1,4 @@
 use colored::*;
-use gtc;
 use std::io::{self, Write};
 
 #[tokio::main]
