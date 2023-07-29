@@ -3,9 +3,9 @@
 # Generative Terminal Companion - GTC
 
 [![License](https://img.shields.io/badge/License-Apache_2.0-blue.svg)](https://opensource.org/licenses/Apache-2.0)
-![Rust](https://github.com/danczw/banter-shell/actions/workflows/rust-ci.yml/badge.svg)
+![Rust](https://github.com/danczw/gtc-cli/actions/workflows/rust-ci.yml/badge.svg)
 
-**A cli written in rust designed to facilitate seamless text-based conversations with ChatGPT.**
+**A cli tool written in rust designed to facilitate seamless text-based conversations with ChatGPT.**
 
 </div>
 
