@@ -28,28 +28,28 @@ mod tests {
     // read_context tests
     #[test]
     fn test_read_context() {
-        let mut file = File::create(".gtc_profile").unwrap();
+        let mut file = File::create(".test_read_context").unwrap();
         writeln!(file, "openai_key").unwrap();
         writeln!(file, "message 1").unwrap();
         writeln!(file, "message 2").unwrap();
         file.flush().unwrap();
 
-        let context_file_path = PathBuf::from(".gtc_profile");
+        let context_file_path = PathBuf::from(".test_read_context");
         let expected_context = gtc::Context {
             openai_key: "openai_key".to_string(),
             hist: vec!["message 1".to_string(), "message 2".to_string()],
         };
         assert_eq!(gtc::read_context(&context_file_path), expected_context);
 
-        std::fs::remove_file(".gtc_profile").unwrap();
+        std::fs::remove_file(".test_read_context").unwrap();
     }
 
     #[test]
     fn test_read_context_with_empty_file() {
-        let mut file = File::create(".gtc_profile").unwrap();
+        let mut file = File::create(".test_read_context_with_empty_file").unwrap();
         file.flush().unwrap();
 
-        let context_file_path = PathBuf::from(".gtc_profile");
+        let context_file_path = PathBuf::from(".test_read_context_with_empty_file");
         let expected_context = gtc::Context {
             openai_key: "".to_string(),
             hist: vec![],
@@ -66,36 +66,36 @@ mod tests {
 
     #[test]
     fn test_read_context_with_empty_key() {
-        let mut file = File::create(".gtc_profile").unwrap();
+        let mut file = File::create(".test_read_context_with_empty_key").unwrap();
         writeln!(file).unwrap();
         writeln!(file, "message 1").unwrap();
         writeln!(file, "message 2").unwrap();
         file.flush().unwrap();
 
-        let context_file_path = PathBuf::from(".gtc_profile");
+        let context_file_path = PathBuf::from(".test_read_context_with_empty_key");
         let expected_context = gtc::Context {
             openai_key: "".to_string(),
             hist: vec!["message 1".to_string(), "message 2".to_string()],
         };
         assert_eq!(gtc::read_context(&context_file_path), expected_context);
 
-        std::fs::remove_file(".gtc_profile").unwrap();
+        std::fs::remove_file(".test_read_context_with_empty_key").unwrap();
     }
 
     #[test]
     fn test_read_context_with_empty_history() {
-        let mut file = File::create(".gtc_profile").unwrap();
+        let mut file = File::create(".test_read_context_with_empty_history").unwrap();
         writeln!(file, "openai_key").unwrap();
         file.flush().unwrap();
 
-        let context_file_path = PathBuf::from(".gtc_profile");
+        let context_file_path = PathBuf::from(".test_read_context_with_empty_history");
         let expected_context = gtc::Context {
             openai_key: "openai_key".to_string(),
             hist: vec![],
         };
         assert_eq!(gtc::read_context(&context_file_path), expected_context);
 
-        std::fs::remove_file(".gtc_profile").unwrap();
+        std::fs::remove_file(".test_read_context_with_empty_history").unwrap();
     }
 
     // input tests
