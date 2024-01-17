@@ -29,7 +29,7 @@ Keeping in mind the conversational nature of ChatGPT, GTC automatically saves th
 
 ### 🔑 Important Note Regarding API Keys
 
-To utilize GTC, an API Key is needed. **Please note that the current version of Shell Companion stores the API key in plain text** within the file `~/.gtc_profile`. As this approach may present potential security risks, we're advising all users to secure their API key properly and to be aware of where and how it’s stored. We're already working on enhanced security features for future releases, so hang tight for those updates! Until then, happy chatting with Generative Terminal Companion!
+To utilize GTC, an API Key is needed. **Please note that the current version of GTC stores the API key in plain text** within the file `~/.gtc`. As this approach may present potential security risks, we're advising all users to secure their API key properly and to be aware of where and how it’s stored. We're already working on enhanced security features for future releases, so hang tight for those updates! Until then, happy chatting with Generative Terminal Companion!
 
 <br>
 
@@ -58,5 +58,5 @@ cargo run -- -m "<message>"
 To run the tests, use the following command:
 
 ```bash
-cargo test
+cargo test -- --test-threads 1
 ```

@@ -4,7 +4,7 @@ use std::io::{self, Write};
 #[tokio::main]
 async fn main() {
     // TODO: add logging
-    const GTC_PROFILE: &str = ".gtc_profile";
+    const GTC_PROFILE: &str = ".gtc";
     let gtc_profile_path = gtc::set_home_dir_path(GTC_PROFILE);
 
     // parse command line arguments
