@@ -1,10 +1,11 @@
 use clap::error::Result;
 use clap::{Arg, ArgAction, ArgMatches, Command};
 use dirs::home_dir;
-use reqwest::{Client, StatusCode};
+use reqwest::{header, Client, StatusCode};
 use serde_json::{json, Map, Value};
 use std::io;
 use std::path::PathBuf;
+use std::time::Duration;
 
 pub fn set_home_dir_path(file_name: &str) -> PathBuf {
     let mut path = home_dir().unwrap();
@@ -91,6 +92,17 @@ pub async fn call_oai(
 ) -> Result<Value, Box<dyn std::error::Error>> {
     let new_msg = arg.get_one::<String>("message").unwrap();
 
+    // Build the headers
+    let mut headers = header::HeaderMap::new();
+    headers.insert(
+        "Content-Type",
+        header::HeaderValue::from_static("application/json"),
+    );
+    let auth_value = format!("Bearer {}", ctx.openai_key.as_str());
+    let mut auth_value = header::HeaderValue::from_str(&auth_value).unwrap();
+    auth_value.set_sensitive(true);
+    headers.insert(header::AUTHORIZATION, auth_value);
+
     // Build the URL
     let url = "https://api.openai.com/v1/chat/completions";
 
@@ -106,21 +118,14 @@ pub async fn call_oai(
     }
     messages.push(json!({"role": "user", "content": new_msg}));
     body.insert("messages".to_string(), Value::Array(messages));
-
     let body_json = Value::Object(body);
 
     // Initialize client and send request
-    let client = Client::new();
-    let resp = client
-        .post(url)
-        .header("Content-Type", "application/json")
-        .header(
-            "Authorization",
-            "Bearer ".to_owned() + ctx.openai_key.as_str(),
-        )
-        .json(&body_json)
-        .send()
-        .await?;
+    let client = Client::builder()
+        .default_headers(headers)
+        .timeout(Duration::new(120, 0))
+        .build()?;
+    let resp = client.post(url).json(&body_json).send().await?;
 
     check_response(resp).await
 }

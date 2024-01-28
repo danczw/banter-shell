@@ -67,6 +67,28 @@ cargo test
 
 <br>
 
+## 📖 Usage
+
+Either build the project yourself or download the latest release from the [releases page](https://github.com/danczw/gtc-cli/releases).
+
+Build the project yourself:
+
+```bash
+cargo build --release
+```
+
+or directly add the binary to your path in order to use it globally:
+
+```bash
+cargo install --path
+```
+
+<br>
+
+------------
+
+<br>
+
 ## 📜 License
 
 This project is licensed under the Apache License 2.0 - see the [LICENSE](LICENSE) file for details.
