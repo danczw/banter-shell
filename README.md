@@ -80,7 +80,7 @@ cargo build --release
 or directly add the binary to your path in order to use it globally:
 
 ```bash
-cargo install --path
+cargo install --path .
 ```
 
 <br>
