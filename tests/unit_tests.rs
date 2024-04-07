@@ -113,10 +113,9 @@ mod tests {
     #[tokio::test]
     async fn test_check_response_ok() {
         // Request a new server from the pool
-        let mut server = mockito::Server::new();
+        let mut server = mockito::Server::new_async().await;
 
         // Use one of these addresses to configure your client
-        // let host = server.host_with_port();
         let url = server.url();
 
         // Create a mock response with status code 200 OK and some JSON data
@@ -148,10 +147,9 @@ mod tests {
     #[tokio::test]
     async fn test_check_response_err() {
         // Request a new server from the pool
-        let mut server = mockito::Server::new();
+        let mut server = mockito::Server::new_async().await;
 
         // Use one of these addresses to configure your client
-        // let host = server.host_with_port();
         let url = server.url();
 
         // Create a mock response with status code 200 OK and some JSON data
