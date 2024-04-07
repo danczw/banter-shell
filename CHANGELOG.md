@@ -1,5 +1,7 @@
 ## [unreleased]
 
+## [0.3.0]
+
 - move message to be indexed argument
 
 ## [0.2.1]
@@ -12,7 +14,7 @@
 
 - renaming of package to Generative Terminal Companion
 
-### [0.1.1]
+## [0.1.1]
 
 - fix command argument checks
 - fix user input conversion
