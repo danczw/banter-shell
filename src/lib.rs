@@ -78,8 +78,9 @@ pub fn cli() -> Command {
         .arg(
             Arg::new("message")
                 .help("The message to send to ChatGPT in quotes.")
-                .short('m')
-                .long("message")
+                // .short('m')
+                // .long("message")
+                .index(1)
                 .action(ArgAction::Set)
                 .required(true),
         )
