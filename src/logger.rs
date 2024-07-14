@@ -26,7 +26,7 @@ pub fn setup_logger(log_path: PathBuf) -> Config {
 
     // Log Trace level output to file where trace is the default level
     // and the programmatically specified level to stderr.
-    let config = Config::builder()
+    Config::builder()
         .appender(Appender::builder().build("logfile", Box::new(logfile)))
         .appender(
             Appender::builder()
@@ -39,7 +39,5 @@ pub fn setup_logger(log_path: PathBuf) -> Config {
                 .appender("stderr")
                 .build(LevelFilter::Trace),
         )
-        .unwrap();
-
-    config
+        .unwrap()
 }
