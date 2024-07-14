@@ -1,5 +1,7 @@
 ## [unreleased]
 
+## [0.4.0]
+
 - add basic file and console logger handlers, everything above `INFO` level to logged to both handlers
 - refactor `lib.rs` into modules for easier maintenance
 
