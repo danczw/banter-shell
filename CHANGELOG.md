@@ -1,5 +1,7 @@
 ## [unreleased]
 
+- add basic file and console logger handlers, everything above `INFO` level to logged to both handlers
+
 ## [0.3.0]
 
 - move message to be indexed argument

@@ -53,6 +53,8 @@ To prompt the Generative Terminal Companion, use the following command:
 cargo run -- "<message>"
 ```
 
+A log file is created under `~/.gtc.log` for troubleshooting.
+
 ### Testing
 
 To run the tests, use the following command:

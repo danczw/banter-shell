@@ -1,23 +1,28 @@
 use colored::*;
+use log::{debug, error, info}; // trace, warn
+mod logger;
 use std::io::{self, Write};
 
 #[tokio::main]
 async fn main() {
-    // TODO: add logging
-    const GTC_PROFILE: &str = ".gtc";
-    let gtc_profile_path = gtc::set_home_dir_path(GTC_PROFILE);
+    let log_path = gtc::set_home_dir_path(".gtc.log");
+    let log_config = logger::setup_logger(log_path);
+    let _handle = log4rs::init_config(log_config).unwrap();
 
-    // parse command line arguments
+    const PROFILE: &str = ".gtc";
+    let profile_path = gtc::set_home_dir_path(PROFILE);
+    debug!("profile_path - {}", profile_path.to_string_lossy());
+
     let matches = gtc::cli().get_matches();
 
     if matches.contains_id("message") {
-        let mut ctx = if gtc_profile_path.exists() {
-            // read existing profile file
-            let mut ctx_read = gtc::read_context(&gtc_profile_path);
+        let mut ctx = if profile_path.exists() {
+            let mut ctx_read = gtc::read_context(&profile_path);
 
             match ctx_read.openai_key.is_empty() {
                 // prompt user for openai key
                 true => {
+                    info!("No OpenAI API key found");
                     // get openai key from user
                     let openai_key = gtc::input(
                         "No OpenAI API key found, please enter:",
@@ -29,7 +34,6 @@ async fn main() {
                     ctx_read.hist = vec![];
                     ctx_read
                 }
-                // else return context
                 false => ctx_read,
             }
         } else {
@@ -46,7 +50,6 @@ async fn main() {
             }
         };
 
-        // call OpenAI API and display response
         let oai_response = gtc::call_oai(&ctx, &matches).await;
         match oai_response {
             Ok(resp_value) => {
@@ -59,14 +62,18 @@ async fn main() {
                     "user||".to_owned() + matches.get_one::<String>("message").unwrap().as_str(),
                 );
                 ctx.hist.push("assistant||".to_owned() + answer);
+
                 // clear profile file and write key as well as last 6 messages to file
-                let mut file = std::fs::File::create(&gtc_profile_path).unwrap();
+                let mut file = std::fs::File::create(&profile_path).unwrap();
                 writeln!(file, "{}", ctx.openai_key).unwrap();
                 for line in ctx.hist.iter().rev().take(6).rev() {
                     writeln!(file, "{}", line.replace('\n', "")).unwrap();
                 }
             }
-            Err(e) => println!("{}", e),
+            Err(e) => {
+                error!("OAI response error - {}", e);
+                println!("Bernard, we have a problem!");
+            }
         }
     }
 
