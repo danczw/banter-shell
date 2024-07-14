@@ -85,6 +85,7 @@ pub fn cli() -> Command {
                 .required(true),
         )
     // TODO: arg to remove local context
+    // TODO: arg to show version
 }
 
 pub async fn call_oai(
