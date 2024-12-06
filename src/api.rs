@@ -11,7 +11,7 @@ pub async fn call_oai(
 ) -> Result<Value, Box<dyn std::error::Error>> {
     let new_msg = arg.get_one::<String>("message").unwrap();
 
-    // Build the headers
+    // build request header
     let mut headers = header::HeaderMap::new();
     headers.insert(
         "Content-Type",
@@ -22,10 +22,10 @@ pub async fn call_oai(
     auth_value.set_sensitive(true);
     headers.insert(header::AUTHORIZATION, auth_value);
 
-    // Build the URL
+    // build URL
     let url = "https://api.openai.com/v1/chat/completions";
 
-    // Build the body
+    // build body
     let mut body: Map<String, Value> = Map::new();
     body.insert("model".to_string(), json!("gpt-4"));
 
@@ -39,7 +39,7 @@ pub async fn call_oai(
     body.insert("messages".to_string(), Value::Array(messages));
     let body_json = Value::Object(body);
 
-    // Initialize client and send request
+    // initialize client and send request
     let client = Client::builder()
         .default_headers(headers)
         .timeout(Duration::new(120, 0))
@@ -50,24 +50,15 @@ pub async fn call_oai(
 }
 
 pub async fn check_response(resp: reqwest::Response) -> Result<Value, Box<dyn std::error::Error>> {
-    // Get response values
     let resp_status = resp.status();
-    // Deserialize response text
     let resp_text = resp.text().await?;
     let resp_json: Value = serde_json::from_str(&resp_text)?;
 
-    // check response
     match resp_status {
-        StatusCode::OK => {
-            // return response text
-            Ok(resp_json)
-        }
-        _ => {
-            // return error message
-            Err(Box::new(std::io::Error::new(
-                std::io::ErrorKind::Other,
-                resp_text,
-            )))
-        }
+        StatusCode::OK => Ok(resp_json),
+        _ => Err(Box::new(std::io::Error::new(
+            std::io::ErrorKind::Other,
+            resp_text,
+        ))),
     }
 }

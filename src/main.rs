@@ -25,10 +25,8 @@ async fn main() {
             let mut ctx_read = context::read_context(&profile_path);
 
             match ctx_read.openai_key.is_empty() {
-                // prompt user for openai key
                 true => {
                     info!("No OpenAI API key found");
-                    // get openai key from user
                     let openai_key = helper::input(
                         "No OpenAI API key found, please enter:",
                         &mut io::stdin().lock(),
@@ -42,13 +40,13 @@ async fn main() {
                 false => ctx_read,
             }
         } else {
-            // create profile if it doesn't exist and prompt user for openai key
+            // create profile if not existing and prompt for openai key
             let openai_key = helper::input(
                 "No OpenAI API key found, please enter:",
                 &mut io::stdin().lock(),
                 &mut io::stdout(),
             );
-            // update context and return
+            // update context
             context::Context {
                 openai_key: openai_key.unwrap().trim().to_string(),
                 hist: vec![],
@@ -81,6 +79,4 @@ async fn main() {
             }
         }
     }
-
-    // add
 }
