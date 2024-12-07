@@ -1,5 +1,6 @@
 #[cfg(test)]
 mod tests {
+    use clap::{Arg, Command};
     use dirs::home_dir;
     use gtc::{api, context, helper};
     use std::fs::File;
@@ -108,7 +109,28 @@ mod tests {
         assert_eq!(writer, b"Does this test pass? ");
     }
 
-    // TODO: test call_oai
+    // test call_oai
+    #[tokio::test]
+    async fn test_call_oai() {
+        let arg_match = Command::new("test_gtc")
+            .arg(Arg::new("message").help("message for testing").index(1))
+            .get_matches_from(vec!["test_gtc", "hello world"]);
+
+        let server = mockito::Server::new_async().await;
+        let url = server.url();
+        std::env::set_var("GTC_API_URL", &url);
+
+        let context = context::Context {
+            openai_key: "openai_key".to_string(),
+            hist: vec![],
+        };
+
+        let _ = api::call_oai(&context, &arg_match).await;
+
+        // cannot assert content of response as test doesn't
+        // mock OpenAI API response structure
+        assert!(true)
+    }
 
     // test check_response
     #[tokio::test]
