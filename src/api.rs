@@ -1,6 +1,8 @@
+use clap::error::Result;
 use clap::ArgMatches;
 use reqwest::{header, Client, StatusCode};
 use serde_json::{json, Map, Value};
+use std::env;
 use std::time::Duration;
 
 use crate::context;
@@ -8,7 +10,7 @@ use crate::context;
 pub async fn call_oai(
     ctx: &context::Context,
     arg: &ArgMatches,
-) -> Result<Value, Box<dyn std::error::Error>> {
+) -> Result<reqwest::Response, Box<dyn std::error::Error>> {
     let new_msg = arg.get_one::<String>("message").unwrap();
 
     // build request header
@@ -22,8 +24,9 @@ pub async fn call_oai(
     auth_value.set_sensitive(true);
     headers.insert(header::AUTHORIZATION, auth_value);
 
-    // build URL
-    let url = "https://api.openai.com/v1/chat/completions";
+    // build URL - env var can be used for testing
+    let url = env::var("GTC_API_URL")
+        .unwrap_or_else(|_| String::from("https://api.openai.com/v1/chat/completions"));
 
     // build body
     let mut body: Map<String, Value> = Map::new();
@@ -46,7 +49,7 @@ pub async fn call_oai(
         .build()?;
     let resp = client.post(url).json(&body_json).send().await?;
 
-    check_response(resp).await
+    Ok(resp)
 }
 
 pub async fn check_response(resp: reqwest::Response) -> Result<Value, Box<dyn std::error::Error>> {

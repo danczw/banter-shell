@@ -53,8 +53,9 @@ async fn main() {
             }
         };
 
-        let oai_response = api::call_oai(&ctx, &matches).await;
-        match oai_response {
+        let oai_response = api::call_oai(&ctx, &matches).await.unwrap();
+        let check_response = api::check_response(oai_response).await;
+        match check_response {
             Ok(resp_value) => {
                 let answer = resp_value["choices"][0]["message"]["content"]
                     .as_str()
