@@ -25,7 +25,7 @@ jobs:
       - name: Set up Rust
         uses: actions/checkout@v2
       - name: Build
-        run: cargo build --verbose
+        run: cargo build --verbose --release
   audit:
     runs-on: ubuntu-latest
     steps:
