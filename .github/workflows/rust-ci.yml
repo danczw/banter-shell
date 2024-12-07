@@ -6,19 +6,34 @@ on:
       - main
 
 jobs:
+  test:
+    runs-on: ubuntu-latest
+    container:
+        image: xd009642/tarpaulin:develop-nightly
+        options: --security-opt seccomp=unconfined
+    steps:
+      - name: Set up Rust
+        uses: actions/checkout@v2
+      - name: Test
+        run: cargo test --verbose
+      - name: Code Coverage
+        run: |
+          cargo +nightly tarpaulin --verbose --workspace --exclude-files src/main.rs --timeout 120 --out xml
   build:
     runs-on: ubuntu-latest
-
+    steps:
+      - name: Set up Rust
+        uses: actions/checkout@v2
+      - name: Build
+        run: cargo build --verbose --release
+  audit:
+    runs-on: ubuntu-latest
     steps:
       - name: Set up Rust
         uses: actions/checkout@v2
       - name: Install cargo-audit
         run: cargo install cargo-audit
-      - name: Build
-        run: cargo build --verbose
-      - name: Test
-        run: cargo test --verbose
-      - name: Clippy
-        run: cargo clippy --verbose -- -D warnings
       - name: Audit
         run: cargo audit
+      - name: Clippy
+        run: cargo clippy --verbose -- -D warnings

@@ -1,5 +1,8 @@
 ## [unreleased]
 
+- remove nesting of API related functions in `api.rs`
+- restructure CI steps and add code coverage check
+
 ## [0.4.0]
 
 - add basic file and console logger handlers, everything above `INFO` level to logged to both handlers

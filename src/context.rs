@@ -7,15 +7,13 @@ pub struct Context {
 }
 
 pub fn read_context(hist_file_path: &PathBuf) -> Context {
-    // Initialize Context struct
     let mut ctx = Context {
         openai_key: String::from(""),
         hist: vec![],
     };
-    // Read game file
+    // read profile file
     let saved = std::fs::read_to_string(hist_file_path).unwrap_or("".to_string());
 
-    // if file is empty or doesn't exist, delete potential file return empty Context struct
     if saved.is_empty() {
         std::fs::remove_file(hist_file_path).unwrap();
         ctx

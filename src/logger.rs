@@ -13,10 +13,8 @@ use std::path::PathBuf;
 pub fn setup_logger(log_path: PathBuf) -> Config {
     let level = log::LevelFilter::Warn;
 
-    // Build a stderr logger.
+    // build stderr logger
     let stderr = ConsoleAppender::builder().target(Target::Stderr).build();
-
-    // Logging to log file.
     let pattern = "{d(%Y-%m-%d %H:%M:%S %Z)(utc)} | {l} | {m}{n}";
     let logfile = FileAppender::builder()
         // Pattern: https://docs.rs/log4rs/*/log4rs/encode/pattern/index.html
@@ -24,8 +22,8 @@ pub fn setup_logger(log_path: PathBuf) -> Config {
         .build(log_path)
         .unwrap();
 
-    // Log Trace level output to file where trace is the default level
-    // and the programmatically specified level to stderr.
+    // log trace level output to file where trace is the default level
+    // and the programmatically specified level to stderr
     Config::builder()
         .appender(Appender::builder().build("logfile", Box::new(logfile)))
         .appender(

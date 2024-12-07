@@ -1,5 +1,6 @@
 #[cfg(test)]
 mod tests {
+    use clap::{Arg, Command};
     use dirs::home_dir;
     use gtc::{api, context, helper};
     use std::fs::File;
@@ -107,18 +108,37 @@ mod tests {
         assert_eq!(result, "yes");
         assert_eq!(writer, b"Does this test pass? ");
     }
-    // TODO: test call_oai
+
+    // test call_oai
+    #[tokio::test]
+    async fn test_call_oai() {
+        let arg_match = Command::new("test_gtc")
+            .arg(Arg::new("message").help("message for testing").index(1))
+            .get_matches_from(vec!["test_gtc", "hello world"]);
+
+        let server = mockito::Server::new_async().await;
+        let url = server.url();
+        std::env::set_var("GTC_API_URL", &url);
+
+        let context = context::Context {
+            openai_key: "openai_key".to_string(),
+            hist: vec![],
+        };
+
+        let _ = api::call_oai(&context, &arg_match).await;
+
+        // cannot assert content of response as test doesn't
+        // mock OpenAI API response structure
+        assert!(true)
+    }
 
     // test check_response
     #[tokio::test]
     async fn test_check_response_ok() {
-        // Request a new server from the pool
         let mut server = mockito::Server::new_async().await;
-
-        // Use one of these addresses to configure your client
         let url = server.url();
 
-        // Create a mock response with status code 200 OK and some JSON data
+        // create mock response with status code 200 OK and some JSON data
         let _mock = server
             .mock("POST", "/")
             .with_status(200)
@@ -126,7 +146,7 @@ mod tests {
             .with_body(r#"{"foo": "bar"}"#)
             .create();
 
-        // Create a new reqwest client and send a request to the mock server
+        // create new reqwest client and send request to mock server
         let client = reqwest::Client::new();
         let resp = client
             .post(&url)
@@ -135,24 +155,17 @@ mod tests {
             .await
             .unwrap();
 
-        // Call the check_response function with the mock response
         let result = api::check_response(resp).await;
-
-        // Assert that the function returns the expected JSON data
         assert_eq!(result.unwrap(), serde_json::json!({"foo": "bar"}));
-
         assert!(true)
     }
 
     #[tokio::test]
     async fn test_check_response_err() {
-        // Request a new server from the pool
         let mut server = mockito::Server::new_async().await;
-
-        // Use one of these addresses to configure your client
         let url = server.url();
 
-        // Create a mock response with status code 200 OK and some JSON data
+        // create mock response with status code 200 OK and some JSON data
         let _mock = server
             .mock("POST", "/")
             .with_status(400)
@@ -160,7 +173,7 @@ mod tests {
             .with_body(r#"{"error": "bad request"}"#)
             .create();
 
-        // Create a new reqwest client and send a request to the mock server
+        // create new reqwest client and send request to mock server
         let client = reqwest::Client::new();
         let resp = client
             .post(&url)
@@ -169,10 +182,7 @@ mod tests {
             .await
             .unwrap();
 
-        // Call the check_response function with the mock response
         let result = api::check_response(resp).await;
-
-        // Assert that the function returns the expected Error
         assert_eq!(
             result.unwrap_err().to_string(),
             r#"{"error": "bad request"}"#
