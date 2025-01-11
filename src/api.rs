@@ -30,7 +30,7 @@ pub async fn call_oai(
 
     // build body
     let mut body: Map<String, Value> = Map::new();
-    body.insert("model".to_string(), json!("gpt-4"));
+    body.insert("model".to_string(), json!("gpt-4o"));
 
     let mut messages = Vec::new();
     for ctx_msg in ctx.hist.iter() {
