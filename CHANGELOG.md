@@ -3,6 +3,7 @@
 - remove nesting of API related functions in `api.rs`
 - restructure CI steps and add code coverage check
 - update model call to use `gpt-4o` by OpenAPI
+- add version command
 
 ## [0.4.0]
 
