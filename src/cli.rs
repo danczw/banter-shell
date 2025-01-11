@@ -1,7 +1,8 @@
-use clap::{Arg, ArgAction, Command};
+use clap::{crate_version, Arg, ArgAction, Command};
 
 pub fn cli() -> Command {
     Command::new("gtc")
+        .version(crate_version!())
         .about("A cli designed to facilitate seamless text-based conversations with ChatGPT.")
         .arg_required_else_help(true)
         .arg(
@@ -11,8 +12,7 @@ pub fn cli() -> Command {
                 // .long("message")
                 .index(1)
                 .action(ArgAction::Set)
-                .required(true),
+                .required(false),
         )
     // TODO: arg to remove local context
-    // TODO: arg to show version
 }
