@@ -1,6 +1,6 @@
 [package]
 name = "gtc"
-version = "0.4.0"
+version = "0.5.0"
 authors = ["danczw <>"]
 license = "Apache-2.0"
 description = "A cli written in rust designed to facilitate seamless text-based conversations with ChatGPT."
